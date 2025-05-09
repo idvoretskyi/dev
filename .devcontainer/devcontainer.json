@@ -23,6 +23,9 @@
         },
         "ghcr.io/devcontainers/features/kind:1": {
             "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
         }
     },
     "customizations": {
@@ -44,7 +47,8 @@
             }
         }
     },
-    "forwardPorts": [],
-    "postCreateCommand": "echo 'Development environment ready!'",
+    "forwardPorts": [22],
+    "postCreateCommand": "echo 'Development environment ready!' && sudo service ssh start",
+    "postStartCommand": "sudo service ssh restart",
     "remoteUser": "vscode"
 }
