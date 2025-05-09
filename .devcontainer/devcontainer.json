@@ -21,7 +21,7 @@
             "helm": "latest",
             "minikube": "latest"
         },
-        "ghcr.io/devcontainers/features/kind:1": {
+        "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"
         },
         "ghcr.io/devcontainers/features/sshd:1": {
@@ -37,7 +37,6 @@
                 "redhat.vscode-yaml",
                 "ms-kubernetes-tools.vscode-kubernetes-tools",
                 "redhat.vscode-openshift-connector",
-                "ms-kubernetes-tools.kind-vscode",
                 "mindaro.mindaro"
             ],
             "settings": {
