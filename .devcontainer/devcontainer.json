@@ -21,9 +21,6 @@
             "helm": "latest",
             "minikube": "latest"
         },
-        "ghcr.io/devcontainers/features/kubernetes-tools:1": {
-            "version": "latest"
-        },
         "ghcr.io/devcontainers/features/kind:1": {
             "version": "latest"
         }
