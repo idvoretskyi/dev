@@ -33,8 +33,7 @@
                 "github.copilot-chat",
                 "redhat.vscode-yaml",
                 "ms-kubernetes-tools.vscode-kubernetes-tools",
-                "redhat.vscode-openshift-connector",
-                "mindaro.mindaro"
+                "redhat.vscode-openshift-connector"
             ],
             "settings": {
                 "editor.formatOnSave": true,
