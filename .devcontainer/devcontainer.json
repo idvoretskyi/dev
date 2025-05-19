@@ -23,6 +23,13 @@
         },
         "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/dotfiles:1": {
+            "repository": "idvoretskyi/dotfiles",
+            "installCommand": ""
         }
     },
     "customizations": {
@@ -32,18 +39,20 @@
                 "github.copilot",
                 "github.copilot-chat",
                 "redhat.vscode-yaml",
-                "ms-kubernetes-tools.vscode-kubernetes-tools",
-                "redhat.vscode-openshift-connector"
+                "ms-kubernetes-tools.vscode-kubernetes-tools"
             ],
             "settings": {
                 "editor.formatOnSave": true,
                 "editor.rulers": [80, 120],
-                "terminal.integrated.defaultProfile.linux": "zsh"
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "files.trimTrailingWhitespace": true,
+                "editor.bracketPairColorization.enabled": true,
+                "editor.guides.bracketPairs": true
             }
         }
     },
     "forwardPorts": [22],
-    "postCreateCommand": "echo 'Development environment ready!' && sudo service ssh start",
+    "postCreateCommand": "apt-get clean && rm -rf /var/lib/apt/lists/* && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), and SSH are configured.' && sudo service ssh start",
     "postStartCommand": "sudo service ssh restart",
     "remoteUser": "vscode"
 }
