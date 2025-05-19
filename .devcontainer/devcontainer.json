@@ -26,10 +26,6 @@
         },
         "ghcr.io/devcontainers/features/github-cli:1": {
             "version": "latest"
-        },
-        "ghcr.io/devcontainers/features/dotfiles:1": {
-            "repository": "idvoretskyi/dotfiles",
-            "installCommand": ""
         }
     },
     "customizations": {
