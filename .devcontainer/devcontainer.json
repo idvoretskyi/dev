@@ -52,7 +52,7 @@
         }
     },
     "forwardPorts": [22],
-    "postCreateCommand": "apt-get clean && rm -rf /var/lib/apt/lists/* && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), and SSH are configured.' && sudo service ssh start",
+    "postCreateCommand": "sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/* && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), and SSH are configured.' && sudo service ssh start",
     "postStartCommand": "sudo service ssh restart",
     "remoteUser": "vscode"
 }
