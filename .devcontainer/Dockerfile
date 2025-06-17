@@ -11,6 +11,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         openssh-server \
         nodejs \
         npm \
+        tcl \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
