@@ -8,6 +8,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         jq \
         build-essential \
         openssh-server \
+        nodejs \
+        npm \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 

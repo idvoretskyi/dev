@@ -2,6 +2,10 @@
 .DS_Store
 Thumbs.db
 
+# Claude Code configuration (template-specific)
+CLAUDE.md
+.claude/
+
 # Editor directories and files
 .idea/
 .vscode/*

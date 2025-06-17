@@ -17,7 +17,7 @@ This is a generic GitHub Codespace/devcontainer template repository that provide
 ## Key Components
 
 - `.devcontainer/devcontainer.json`: Main devcontainer configuration using Docker Compose with features, VS Code extensions, and settings
-- `.devcontainer/Dockerfile`: Custom Ubuntu image with essential development packages (curl, wget, jq, build-essential, openssh-server)
+- `.devcontainer/Dockerfile`: Custom Ubuntu image with essential development packages (curl, wget, jq, build-essential, openssh-server, nodejs, npm)
 - `.devcontainer/docker-compose.yml`: Container orchestration with volume mounts and SSH port forwarding
 
 ## Common Commands
@@ -27,6 +27,7 @@ The environment includes these pre-configured tools:
 - Docker and Docker Compose (via docker-in-docker)
 - Kubernetes tools: kubectl, helm, minikube
 - GitHub CLI (gh)
+- Node.js, npm, and npx
 - SSH server (automatically started on port 22)
 
 ## VS Code Configuration
