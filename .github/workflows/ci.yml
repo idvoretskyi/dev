@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  devcontainer-test:
+    runs-on: ubuntu-latest
+    name: Test Devcontainer Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and test devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/idvoretskyi/dev
+          runCmd: |
+            # Test basic tools are available
+            which docker
+            which kubectl
+            which helm
+            which gh
+            which node
+            which npm
+            # Test SSH server setup
+            ls -la /run/sshd
+            # Test essential packages
+            curl --version
+            jq --version
+
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Security and SBOM Analysis
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image for scanning
+        run: |
+          docker build -t dev-template:latest .devcontainer/
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'dev-template:latest'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: 'dev-template:latest'
+          format: 'spdx-json'
+          output-file: 'sbom.spdx.json'
+
+      - name: Upload SBOM as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.spdx.json
+
+  lint-and-validate:
+    runs-on: ubuntu-latest
+    name: Lint and Validate Configuration
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate devcontainer.json
+        uses: devcontainers/ci@v0.3
+        with:
+          runCmd: devcontainer read-configuration --workspace-folder .
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: .devcontainer/Dockerfile
+
+      - name: Validate docker-compose.yml
+        run: |
+          docker-compose -f .devcontainer/docker-compose.yml config
+
+      - name: Check for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
