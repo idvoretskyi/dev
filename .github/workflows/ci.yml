@@ -74,6 +74,8 @@ jobs:
       - name: Test devcontainer functionality
         uses: devcontainers/ci@v0.3
         with:
+          imageName: ghcr.io/idvoretskyi/dev-test
+          push: never
           runCmd: |
             # Test basic tools are available
             which tclsh || echo "tclsh is missing"
