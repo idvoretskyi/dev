@@ -65,14 +65,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download Docker image artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-image
+      - name: Install missing dependencies
+        run: sudo apt-get update && sudo apt-get install -y tcl
 
-      - name: Load Docker image
-        run: |
-          docker load < dev-template.tar.gz
+      - name: Check Docker Compose version
+        run: docker compose version
 
       - name: Test devcontainer functionality
         uses: devcontainers/ci@v0.3
