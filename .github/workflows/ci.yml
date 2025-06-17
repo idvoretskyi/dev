@@ -12,9 +12,11 @@ permissions:
   actions: read
 
 jobs:
-  devcontainer-test:
+  build:
     runs-on: ubuntu-latest
-    name: Test Devcontainer Build
+    name: Build and Validate
+    outputs:
+      image-name: ${{ steps.build.outputs.image-name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,7 +27,51 @@ jobs:
       - name: Validate docker-compose.yml
         run: docker compose -f .devcontainer/docker-compose.yml config
 
-      - name: Build and test devcontainer
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: .devcontainer/Dockerfile
+
+      - name: Check for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        id: build
+        run: |
+          IMAGE_NAME="dev-template:${{ github.sha }}"
+          docker build -t "$IMAGE_NAME" .devcontainer/
+          echo "image-name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Save Docker image as artifact
+        run: |
+          docker save ${{ steps.build.outputs.image-name }} | gzip > dev-template.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: dev-template.tar.gz
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test Devcontainer
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load Docker image
+        run: |
+          docker load < dev-template.tar.gz
+
+      - name: Test devcontainer functionality
         uses: devcontainers/ci@v0.3
         with:
           runCmd: |
@@ -43,18 +89,24 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     name: Security and SBOM Analysis
+    needs: build
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Docker image for scanning
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load Docker image
         run: |
-          docker build -t dev-template:latest .devcontainer/
+          docker load < dev-template.tar.gz
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'dev-template:latest'
+          image-ref: '${{ needs.build.outputs.image-name }}'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
@@ -69,7 +121,7 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          image: 'dev-template:latest'
+          image: '${{ needs.build.outputs.image-name }}'
           format: 'spdx-json'
           output-file: 'sbom.spdx.json'
 
@@ -78,29 +130,3 @@ jobs:
         with:
           name: sbom
           path: sbom.spdx.json
-
-  lint-and-validate:
-    runs-on: ubuntu-latest
-    name: Lint and Validate Configuration
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Validate devcontainer.json
-        uses: devcontainers/ci@v0.3
-        with:
-          runCmd: devcontainer read-configuration --workspace-folder .
-
-      - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: .devcontainer/Dockerfile
-
-      - name: Validate docker-compose.yml
-        run: |
-          docker compose -f .devcontainer/docker-compose.yml config
-
-      - name: Check for secrets
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,5 +1,8 @@
 # Development Environment Repository
 
+[![CI](https://github.com/idvoretskyi/dev/actions/workflows/ci.yml/badge.svg)](https://github.com/idvoretskyi/dev/actions/workflows/ci.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/idvoretskyi/dev)
+
 This repository serves as a default generic GitHub Codespace template.
 
 ## Features
