@@ -1,6 +1,8 @@
 {
     "name": "Generic Development Environment",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
@@ -48,7 +50,7 @@
         }
     },
     "forwardPorts": [22],
-    "postCreateCommand": "sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/* && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), and SSH are configured.' && sudo service ssh start",
+    "postCreateCommand": "echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), and SSH are configured.' && sudo service ssh start",
     "postStartCommand": "sudo service ssh restart",
     "remoteUser": "vscode"
 }
