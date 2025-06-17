@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 jobs:
   devcontainer-test:
     runs-on: ubuntu-latest
@@ -14,10 +19,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install missing dependencies
+        run: sudo apt-get update && sudo apt-get install -y tcl
+
+      - name: Validate docker-compose.yml
+        run: docker-compose -f .devcontainer/docker-compose.yml config
+
       - name: Build and test devcontainer
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/idvoretskyi/dev
           runCmd: |
             # Test basic tools are available
             which docker
@@ -26,8 +36,6 @@ jobs:
             which gh
             which node
             which npm
-            # Test SSH server setup
-            ls -la /run/sshd
             # Test essential packages
             curl --version
             jq --version
@@ -55,6 +63,8 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
