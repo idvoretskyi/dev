@@ -8,9 +8,7 @@ CLAUDE.md
 
 # Editor directories and files
 .idea/
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+.vscode/
 *.suo
 *.ntvs*
 *.njsproj
