@@ -15,6 +15,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Claude Code
+RUN npm install -g @anthropic-ai/claude-code
+
 # Set up SSH directory
 RUN mkdir -p /run/sshd
 
