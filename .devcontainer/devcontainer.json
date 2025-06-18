@@ -15,6 +15,11 @@
             "version": "latest",
             "ppa": false
         },
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts",
+            "nodeGypDependencies": false,
+            "installYarnUsingApt": false
+        },
         "ghcr.io/devcontainers/features/docker-in-docker:2": {
             "version": "latest",
             "moby": true,
@@ -52,7 +57,7 @@
         }
     },
     "forwardPorts": [22],
-    "postCreateCommand": "echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), and SSH are configured.' && sudo service ssh start",
+    "postCreateCommand": "npm install -g @anthropic-ai/claude-code@latest && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), Claude Code, and SSH are configured.' && sudo service ssh start",
     "postStartCommand": "sudo service ssh restart",
     "remoteUser": "vscode"
 }
