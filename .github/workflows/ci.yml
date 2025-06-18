@@ -68,9 +68,6 @@ jobs:
             which gh || echo "gh is missing"
             which node || echo "node is missing"
             which npm || echo "npm is missing"
-            which claude-code || echo "claude-code is missing"
             # Test essential packages
             curl --version
             jq --version
-            # Test Claude Code version
-            claude-code --version || echo "claude-code version check failed"
