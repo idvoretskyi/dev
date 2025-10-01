@@ -58,7 +58,7 @@
         }
     },
     "forwardPorts": [22],
-    "postCreateCommand": "npm install -g @anthropic-ai/claude-code@latest && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), Claude Code, and SSH are configured.' && sudo service ssh start",
+    "postCreateCommand": "npm install -g @anthropic-ai/claude-code@latest @github/copilot && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), Claude Code, GitHub Copilot CLI, and SSH are configured.' && sudo service ssh start",
     "postStartCommand": "sudo service ssh restart",
     "remoteUser": "vscode"
 }
