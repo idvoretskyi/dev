@@ -50,10 +50,16 @@ jobs:
           push: never
           runCmd: |
             # Test basic tools are available
+            which python3 || echo "python3 is missing"
+            which pip3 || echo "pip3 is missing"
             which docker || echo "docker is missing"
             which gh || echo "gh is missing"
             which node || echo "node is missing"
             which npm || echo "npm is missing"
             # Test essential packages
+            python3 --version
+            node --version
+            docker --version
+            gh --version
             curl --version
             jq --version

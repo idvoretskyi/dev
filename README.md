@@ -9,27 +9,31 @@ This repository serves as an optimized GitHub Codespaces template for general de
 
 - Base image: Ubuntu 24.04
 - Essential development tools:
+  - Python 3.12 with pip
+  - Node.js LTS with npm
   - Git (OS-provided)
-  - Node.js LTS
-  - Docker-in-Docker
+  - Docker-in-Docker with Docker Compose v2
   - GitHub CLI
   - Zsh with common utilities
+  - Build essentials (gcc, make, etc.)
 - VS Code extensions:
+  - Python language support
   - Docker support
   - GitHub Copilot
   - YAML support
 
 ## Performance Optimizations
 
-The devcontainer is optimized for fast startup:
+The devcontainer balances speed with operability:
 
+- Includes essential tools: Python, Node.js, Docker, Git, GitHub CLI
 - Disabled package upgrades during build
 - Removed heavy features (kubectl, helm, minikube, sshd)
-- Removed unnecessary Docker packages
-- Minimal postCreateCommand
-- Essential VS Code extensions only
+- Uses OS-provided Git for faster builds
+- Streamlined postCreateCommand with version checks
+- Core VS Code extensions only
 
-Estimated startup time: 1-2 minutes
+Estimated startup time: 2-3 minutes
 
 ## Usage
 
