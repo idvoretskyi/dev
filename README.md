@@ -14,9 +14,11 @@ This repository serves as an optimized GitHub Codespaces template for general de
   - Git (OS-provided)
   - Docker-in-Docker with Docker Compose v2
   - GitHub CLI
+  - Claude Code CLI
   - Zsh with common utilities
   - Build essentials (gcc, make, etc.)
 - VS Code extensions:
+  - Claude Dev (Anthropic)
   - Python language support
   - Docker support
   - GitHub Copilot
@@ -26,11 +28,11 @@ This repository serves as an optimized GitHub Codespaces template for general de
 
 The devcontainer balances speed with operability:
 
-- Includes essential tools: Python, Node.js, Docker, Git, GitHub CLI
+- Includes essential tools: Python, Node.js, Docker, Git, GitHub CLI, Claude Code CLI
 - Disabled package upgrades during build
 - Removed heavy features (kubectl, helm, minikube, sshd)
 - Uses OS-provided Git for faster builds
-- Streamlined postCreateCommand with version checks
+- Installs Claude Code CLI via npm in postCreateCommand
 - Core VS Code extensions only
 
 Estimated startup time: 2-3 minutes

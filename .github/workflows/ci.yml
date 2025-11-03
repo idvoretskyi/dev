@@ -56,10 +56,12 @@ jobs:
             which gh || echo "gh is missing"
             which node || echo "node is missing"
             which npm || echo "npm is missing"
+            which claude || echo "claude is missing"
             # Test essential packages
             python3 --version
             node --version
             docker --version
             gh --version
+            claude --version
             curl --version
             jq --version

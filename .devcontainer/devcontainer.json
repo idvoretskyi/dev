@@ -41,7 +41,8 @@
                 "github.copilot-chat",
                 "redhat.vscode-yaml",
                 "ms-python.python",
-                "ms-python.vscode-pylance"
+                "ms-python.vscode-pylance",
+                "anthropic.claude-dev"
             ],
             "settings": {
                 "editor.formatOnSave": true,
@@ -53,6 +54,6 @@
             }
         }
     },
-    "postCreateCommand": "python3 --version && node --version && docker --version && gh --version && echo 'Development environment ready'",
+    "postCreateCommand": "npm install -g @anthropic-ai/claude-code && python3 --version && node --version && docker --version && gh --version && claude --version && echo 'Development environment ready'",
     "remoteUser": "vscode"
 }
