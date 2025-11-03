@@ -42,7 +42,7 @@
                 "redhat.vscode-yaml",
                 "ms-python.python",
                 "ms-python.vscode-pylance",
-                "anthropic.claude-dev"
+                "anthropic.claude-code"
             ],
             "settings": {
                 "editor.formatOnSave": true,
