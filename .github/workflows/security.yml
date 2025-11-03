@@ -8,13 +8,11 @@ on:
     branches: [ main ]
     paths:
       - '.devcontainer/**'
-      - 'Dockerfile'
       - '.github/workflows/security.yml'
   pull_request:
     branches: [ main ]
     paths:
       - '.devcontainer/**'
-      - 'Dockerfile'
       - '.github/workflows/security.yml'
   workflow_dispatch: # Allow manual trigger
 
@@ -30,9 +28,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install missing dependencies
-        run: sudo apt-get update && sudo apt-get install -y tcl
-
       - name: Build Docker image for scanning
         run: |
           IMAGE_NAME="dev-template:${{ github.sha }}"
@@ -40,11 +35,12 @@ jobs:
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: '${{ env.IMAGE_NAME }}'
           format: 'sarif'
           output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
@@ -70,12 +66,13 @@ jobs:
           retention-days: 30
 
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
           format: 'sarif'
           output: 'trivy-fs-results.sarif'
+          severity: 'CRITICAL,HIGH'
 
       - name: Upload filesystem scan results
         uses: github/codeql-action/upload-sarif@v3
