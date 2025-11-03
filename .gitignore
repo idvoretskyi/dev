@@ -47,3 +47,4 @@ out/
 .temp/
 .tmp/
 coverage/
+.dccache
