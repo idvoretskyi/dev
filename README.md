@@ -61,27 +61,32 @@ cp -r .devcontainer /path/to/your/project/
 
 ### Customization
 
-Edit `.devcontainer/devcontainer.json` to add features:
+Edit `.devcontainer/devcontainer.json` to add features or tools:
 
 ```json
 {
   "features": {
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.11"
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17"
     }
   },
   "postCreateCommand": "pip install -r requirements.txt"
 }
 ```
 
-## Optional Tools
+To add heavy tools like Kubernetes:
 
-Install additional tools as needed:
-```bash
-bash .devcontainer/setup-optional-tools.sh
+```json
+{
+  "features": {
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest",
+      "minikube": "none"
+    }
+  }
+}
 ```
-
-Edit the script to customize which tools to install.
 
 ## License
 
