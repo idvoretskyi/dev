@@ -43,7 +43,7 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
-          category: 'trivy-image-scan'
+          category: 'security-analysis/trivy-image'
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
@@ -74,4 +74,4 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-fs-results.sarif'
-          category: 'trivy-filesystem-scan'
+          category: 'security-analysis/trivy-filesystem'
