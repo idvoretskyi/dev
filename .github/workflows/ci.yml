@@ -54,7 +54,6 @@ jobs:
             which gh || echo "gh is missing"
             which node || echo "node is missing"
             which npm || echo "npm is missing"
-            which github-copilot-cli || echo "github-copilot-cli is missing"
             # Test essential packages
             curl --version
             jq --version
