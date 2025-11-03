@@ -9,11 +9,15 @@
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
             "username": "vscode",
-            "upgradePackages": true
+            "upgradePackages": false
         },
         "ghcr.io/devcontainers/features/git:1": {
-            "version": "latest",
+            "version": "os-provided",
             "ppa": false
+        },
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.12",
+            "installTools": true
         },
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts",
@@ -24,14 +28,6 @@
             "version": "latest",
             "moby": true,
             "dockerDashComposeVersion": "v2"
-        },
-        "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
-            "version": "latest",
-            "helm": "latest",
-            "minikube": "latest"
-        },
-        "ghcr.io/devcontainers/features/sshd:1": {
-            "version": "latest"
         },
         "ghcr.io/devcontainers/features/github-cli:1": {
             "version": "latest"
@@ -44,8 +40,9 @@
                 "github.copilot",
                 "github.copilot-chat",
                 "redhat.vscode-yaml",
-                "ms-kubernetes-tools.vscode-kubernetes-tools",
-                "blinksh.blink-fs"
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "anthropic.claude-code"
             ],
             "settings": {
                 "editor.formatOnSave": true,
@@ -57,8 +54,6 @@
             }
         }
     },
-    "forwardPorts": [22],
-    "postCreateCommand": "npm install -g @anthropic-ai/claude-code@latest @github/copilot && echo '🚀 Development environment ready! Docker, Kubernetes (Minikube), Claude Code, GitHub Copilot CLI, and SSH are configured.' && sudo service ssh start",
-    "postStartCommand": "sudo service ssh restart",
+    "postCreateCommand": "npm install -g @anthropic-ai/claude-code && python3 --version && node --version && docker --version && gh --version && claude --version && echo 'Development environment ready'",
     "remoteUser": "vscode"
 }

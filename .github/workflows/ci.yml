@@ -17,15 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install missing dependencies
-        run: sudo apt-get update && sudo apt-get install -y tcl
-
-      - name: Check Docker Compose file existence
-        run: test -f .devcontainer/docker-compose.yml && echo "Docker Compose file exists"
-
-      - name: Validate docker-compose.yml
-        run: docker compose -f .devcontainer/docker-compose.yml config
+        with:
+          fetch-depth: 0
 
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
@@ -48,12 +41,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install missing dependencies
-        run: sudo apt-get update && sudo apt-get install -y tcl
-
-      - name: Check Docker Compose version
-        run: docker compose version
+        with:
+          fetch-depth: 0
 
       - name: Test devcontainer functionality
         uses: devcontainers/ci@v0.3
@@ -61,14 +50,18 @@ jobs:
           push: never
           runCmd: |
             # Test basic tools are available
-            which tclsh || echo "tclsh is missing"
+            which python3 || echo "python3 is missing"
+            which pip3 || echo "pip3 is missing"
             which docker || echo "docker is missing"
-            which kubectl || echo "kubectl is missing"
-            which helm || echo "helm is missing"
             which gh || echo "gh is missing"
             which node || echo "node is missing"
             which npm || echo "npm is missing"
-            which github-copilot-cli || echo "github-copilot-cli is missing"
+            which claude || echo "claude is missing"
             # Test essential packages
+            python3 --version
+            node --version
+            docker --version
+            gh --version
+            claude --version
             curl --version
             jq --version
