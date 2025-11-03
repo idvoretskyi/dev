@@ -32,6 +32,7 @@ The devcontainer balances speed with operability:
 - Disabled package upgrades during build
 - Removed heavy features (kubectl, helm, minikube, sshd)
 - Uses OS-provided Git for faster builds
+- Uses OS-provided Python (precompiled) for faster setup
 - Installs Claude Code CLI via npm in postCreateCommand
 - Core VS Code extensions only
 

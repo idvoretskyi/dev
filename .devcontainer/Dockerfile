@@ -8,6 +8,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         wget \
         jq \
         build-essential \
+        python3 \
+        python3-venv \
+        python3-pip \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
