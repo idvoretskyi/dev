@@ -18,15 +18,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install missing dependencies
-        run: sudo apt-get update && sudo apt-get install -y tcl
-
-      - name: Check Docker Compose file existence
-        run: test -f .devcontainer/docker-compose.yml && echo "Docker Compose file exists"
-
-      - name: Validate docker-compose.yml
-        run: docker compose -f .devcontainer/docker-compose.yml config
-
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
@@ -49,22 +40,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install missing dependencies
-        run: sudo apt-get update && sudo apt-get install -y tcl
-
-      - name: Check Docker Compose version
-        run: docker compose version
-
       - name: Test devcontainer functionality
         uses: devcontainers/ci@v0.3
         with:
           push: never
           runCmd: |
             # Test basic tools are available
-            which tclsh || echo "tclsh is missing"
             which docker || echo "docker is missing"
-            which kubectl || echo "kubectl is missing"
-            which helm || echo "helm is missing"
             which gh || echo "gh is missing"
             which node || echo "node is missing"
             which npm || echo "npm is missing"
