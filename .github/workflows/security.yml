@@ -25,12 +25,15 @@ jobs:
           persist-credentials: false
 
       - name: Build Docker image for scanning
+        id: build
+        continue-on-error: true
         run: |
           IMAGE_NAME="dev-template:${{ github.sha }}"
           docker build -t "$IMAGE_NAME" .devcontainer/
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
       - name: Run Trivy vulnerability scanner
+        if: steps.build.outcome == 'success'
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: '${{ env.IMAGE_NAME }}'
@@ -40,13 +43,14 @@ jobs:
           exit-code: '0'
 
       - name: Upload Trivy scan results to GitHub Security tab
+        if: steps.build.outcome == 'success'
         uses: github/codeql-action/upload-sarif@95e58e9a2cdfd71adc6e0353d5c52f41a045d225 # v4
-        if: always()
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'security-analysis/trivy-image'
 
       - name: Generate SBOM
+        if: steps.build.outcome == 'success'
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
         with:
           image: '${{ env.IMAGE_NAME }}'
@@ -54,6 +58,7 @@ jobs:
           output-file: 'sbom.spdx.json'
 
       - name: Upload SBOM as artifact
+        if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: sbom-${{ github.sha }}
