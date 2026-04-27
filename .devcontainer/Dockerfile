@@ -7,6 +7,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     python3-venv \
     python3-pip \
     sudo \
-    && apt-get -y upgrade linux-libc-dev vim-tiny \
+    linux-libc-dev \
+    vim-tiny \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
