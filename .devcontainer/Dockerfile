@@ -9,6 +9,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     sudo \
     linux-libc-dev \
     vim-tiny \
-    && apt-get -y upgrade gnupg gpg gpg-agent gpgsm gpgconf keyboxd \
+    && apt-get -y upgrade \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
