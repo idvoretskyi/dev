@@ -8,5 +8,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     python3-pip \
     sudo \
     linux-libc-dev \
+    vim-tiny \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
