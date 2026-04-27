@@ -7,52 +7,40 @@
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
-            "installZsh": true,
+            "installZsh": false,
+            "installOhMyZsh": false,
+            "configureZshAsDefaultShell": false,
             "username": "vscode",
             "upgradePackages": false
-        },
-        "ghcr.io/devcontainers/features/git:1": {
-            "version": "os-provided",
-            "ppa": false
         },
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts",
             "nodeGypDependencies": false,
             "installYarnUsingApt": false
         },
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {
-            "version": "latest",
-            "moby": true,
-            "dockerDashComposeVersion": "v2"
-        },
         "ghcr.io/devcontainers/features/github-cli:1": {
-            "version": "latest"
-        },
-        "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"
         }
     },
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-azuretools.vscode-docker",
                 "github.copilot",
                 "github.copilot-chat",
                 "redhat.vscode-yaml",
                 "ms-python.python",
-                "ms-python.vscode-pylance",
-                "anthropic.claude-code"
+                "ms-python.vscode-pylance"
             ],
             "settings": {
                 "editor.formatOnSave": true,
                 "editor.rulers": [80, 120],
-                "terminal.integrated.defaultProfile.linux": "zsh",
                 "files.trimTrailingWhitespace": true,
                 "editor.bracketPairColorization.enabled": true,
                 "editor.guides.bracketPairs": true
             }
         }
     },
-    "postCreateCommand": "npm install -g @anthropic-ai/claude-code opencode-ai && python3 --version && node --version && docker --version && gh --version && claude --version && opencode --version && echo 'Development environment ready'",
+    "updateContentCommand": "npm install -g opencode-ai",
+    "postCreateCommand": "opencode --version && echo 'Development environment ready'",
     "remoteUser": "vscode"
 }
