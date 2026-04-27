@@ -57,11 +57,13 @@ jobs:
             which node || echo "node is missing"
             which npm || echo "npm is missing"
             which claude || echo "claude is missing"
+            which opencode || echo "opencode is missing"
             # Test essential packages
             python3 --version
             node --version
             docker --version
             gh --version
             claude --version
+            opencode --version
             curl --version
             jq --version
