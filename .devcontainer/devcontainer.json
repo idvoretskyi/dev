@@ -53,6 +53,6 @@
             }
         }
     },
-    "postCreateCommand": "npm install -g @anthropic-ai/claude-code && python3 --version && node --version && docker --version && gh --version && claude --version && echo 'Development environment ready'",
+    "postCreateCommand": "npm install -g @anthropic-ai/claude-code opencode-ai && python3 --version && node --version && docker --version && gh --version && claude --version && opencode --version && echo 'Development environment ready'",
     "remoteUser": "vscode"
 }

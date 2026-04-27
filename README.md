@@ -17,6 +17,7 @@ Codespaces and local VS Code Dev Containers.
   - Docker-in-Docker with Docker Compose v2
   - GitHub CLI
   - Claude Code CLI installed in `postCreateCommand`
+  - OpenCode TUI installed in `postCreateCommand`
   - Zsh and common shell utilities
   - Build essentials (`gcc`, `make`, and related packages)
   - SSH daemon support via the devcontainer feature
@@ -35,7 +36,7 @@ The devcontainer balances speed with operability:
 - Avoids full package upgrades during image build to reduce rebuild time
 - Uses the devcontainer feature set for Node.js, Git, Docker, GitHub CLI, and SSH
 - Uses Ubuntu's packaged Python runtime for a faster base setup
-- Installs Claude Code CLI in `postCreateCommand` instead of baking it into the image
+- Installs Claude Code CLI and OpenCode TUI in `postCreateCommand` instead of baking them into the image
 - Limits editor customizations to a small, broadly useful extension set
 
 Estimated startup time: 2-3 minutes, depending on feature downloads and
