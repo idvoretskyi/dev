@@ -14,33 +14,54 @@ Codespaces and local VS Code Dev Containers.
 - Core tooling for general development work:
   - Python 3 with `venv` and `pip`
   - Node.js LTS with `npm`
-  - Docker-in-Docker with Docker Compose v2
   - GitHub CLI
-  - Claude Code CLI installed in `postCreateCommand`
-  - OpenCode TUI installed in `postCreateCommand`
-  - Zsh and common shell utilities
-  - Build essentials (`gcc`, `make`, and related packages)
-  - SSH daemon support via the devcontainer feature
+  - OpenCode TUI installed via `updateContentCommand` (cached by prebuilds)
+  - Bash shell with common utilities
+  - Build essentials (`gcc`, `make`, and related packages) via base image
 - VS Code extensions:
-  - Anthropic Claude Code
   - Python and Pylance
-  - Docker
   - GitHub Copilot and Copilot Chat
   - YAML
 
 ## Performance Optimizations
 
-The devcontainer balances speed with operability:
+The devcontainer is tuned for fast Codespaces startup:
 
-- Keeps the image focused on core development tooling
-- Avoids full package upgrades during image build to reduce rebuild time
-- Uses the devcontainer feature set for Node.js, Git, Docker, GitHub CLI, and SSH
-- Uses Ubuntu's packaged Python runtime for a faster base setup
-- Installs Claude Code CLI and OpenCode TUI in `postCreateCommand` instead of baking them into the image
-- Limits editor customizations to a small, broadly useful extension set
+- Minimal feature set: only `common-utils`, `node`, and `github-cli` features
+  are installed — Docker-in-Docker, sshd, and git features are omitted
+- `common-utils` configured with zsh and Oh My Zsh disabled
+- No full package upgrades during image build
+- `curl`, `wget`, `jq`, and `git` sourced from the base image and
+  `common-utils` feature — not re-installed in the Dockerfile
+- OpenCode TUI installed in `updateContentCommand` instead of `postCreateCommand`,
+  so it is cached during Codespaces prebuilds and not re-run on every start
+- Small, targeted extension set
 
-Estimated startup time: 2-3 minutes, depending on feature downloads and
-network speed.
+Estimated startup time: **45–75 seconds** without prebuilds,
+**10–25 seconds** with prebuilds enabled (see below).
+
+## Speeding Up Codespaces with Prebuilds
+
+Codespaces prebuilds cache the fully built container image, installed features,
+and `updateContentCommand` output on GitHub's infrastructure. This is the
+single biggest lever for fast cold-starts.
+
+### How to enable
+
+1. Navigate to the repository on GitHub.
+2. Go to **Settings → Codespaces**.
+3. Click **Set up prebuild configuration**.
+4. Select the `main` branch and choose one or more regions closest to your
+   team.
+5. Set the trigger to **"On every push"** (or "On configuration change" for
+   less frequent rebuilds).
+6. Save.
+
+The first prebuild takes roughly 3–5 minutes. After that, every new Codespace
+created from `main` will start in approximately **10–25 seconds**.
+
+> **Tip**: Prebuilds are available on GitHub Team and Enterprise plans, and are
+> free for public repositories up to a certain storage quota.
 
 ## Usage
 
@@ -59,8 +80,8 @@ network speed.
 ## Repository Structure
 
 - `.devcontainer/devcontainer.json`: main devcontainer definition, features,
-  VS Code extensions, and post-create validation command
-- `.devcontainer/Dockerfile`: minimal image customization for extra packages
+  VS Code extensions, and lifecycle commands
+- `.devcontainer/Dockerfile`: minimal image customization for Python packages
 - `.github/workflows/ci.yml`: CI checks for Dockerfile linting, secret
   scanning, image build, and devcontainer smoke testing
 
@@ -86,21 +107,16 @@ Edit `.devcontainer/devcontainer.json` to add features or tools:
     "ghcr.io/devcontainers/features/java:1": {
       "version": "17"
     }
-  },
-  "postCreateCommand": "pip install -r requirements.txt"
+  }
 }
 ```
 
-To add heavier tooling when you actually need it:
+To add Docker support when you need it:
 
 ```json
 {
   "features": {
-    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
-      "version": "latest",
-      "helm": "latest",
-      "minikube": "none"
-    }
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   }
 }
 ```
