@@ -9,5 +9,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     sudo \
     vim-tiny \
     && apt-get -y upgrade \
+    && apt-get -y purge linux-libc-dev \
+    && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
