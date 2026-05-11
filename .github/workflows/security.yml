@@ -44,7 +44,7 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         if: steps.build.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7 # v4
+        uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'security-analysis/trivy-image'
@@ -76,7 +76,7 @@ jobs:
           exit-code: '0'
 
       - name: Upload filesystem scan results
-        uses: github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7 # v4
+        uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4
         if: always()
         with:
           sarif_file: 'trivy-fs-results.sarif'
