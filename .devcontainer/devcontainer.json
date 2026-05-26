@@ -5,6 +5,7 @@
         "context": "."
     },
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "remoteUser": "vscode",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": false,
@@ -13,15 +14,15 @@
             "username": "vscode",
             "upgradePackages": false
         },
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
+        },
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts",
             "nodeGypDependencies": false,
             "installYarnUsingApt": false
         },
         "ghcr.io/devcontainers/features/github-cli:1": {
-            "version": "latest"
-        },
-        "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"
         }
     },
@@ -30,9 +31,9 @@
             "extensions": [
                 "github.copilot",
                 "github.copilot-chat",
-                "redhat.vscode-yaml",
                 "ms-python.python",
-                "ms-python.vscode-pylance"
+                "ms-python.vscode-pylance",
+                "redhat.vscode-yaml"
             ],
             "settings": {
                 "editor.formatOnSave": true,
@@ -44,6 +45,5 @@
         }
     },
     "updateContentCommand": "npm install -g opencode-ai",
-    "postCreateCommand": "opencode --version && echo 'Development environment ready'",
-    "remoteUser": "vscode"
+    "postCreateCommand": "opencode --version && echo 'Development environment ready'"
 }

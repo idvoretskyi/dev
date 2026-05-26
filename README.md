@@ -27,18 +27,18 @@ Codespaces and local VS Code Dev Containers.
 
 The devcontainer is tuned for fast Codespaces startup:
 
-- Minimal feature set: only `common-utils`, `node`, and `github-cli` features
-  are installed — Docker-in-Docker, sshd, and git features are omitted
+- Minimal feature set: only `common-utils`, `sshd`, `node`, and `github-cli`
+  features are installed — Docker-in-Docker and git features are omitted
 - `common-utils` configured with zsh and Oh My Zsh disabled
-- No full package upgrades during image build
 - `curl`, `wget`, `jq`, and `git` sourced from the base image and
   `common-utils` feature — not re-installed in the Dockerfile
 - OpenCode TUI installed in `updateContentCommand` instead of `postCreateCommand`,
   so it is cached during Codespaces prebuilds and not re-run on every start
 - Small, targeted extension set
 
-Estimated startup time: **45–75 seconds** without prebuilds,
-**10–25 seconds** with prebuilds enabled (see below).
+Approximate startup time: **~45–75 seconds** without prebuilds and
+**~10–25 seconds** with prebuilds enabled (actual times will vary by
+region, plan, and image cache state).
 
 ## Speeding Up Codespaces with Prebuilds
 
@@ -84,6 +84,9 @@ created from `main` will start in approximately **10–25 seconds**.
 - `.devcontainer/Dockerfile`: minimal image customization for Python packages
 - `.github/workflows/ci.yml`: CI checks for Dockerfile linting, secret
   scanning, image build, and devcontainer smoke testing
+- `.github/workflows/security.yml`: scheduled and on-push Trivy image and
+  filesystem scans, plus SBOM generation
+- `.github/dependabot.yml`: weekly GitHub Actions and Docker base-image updates
 
 ## Using as a Template
 
