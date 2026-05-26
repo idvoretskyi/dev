@@ -33,6 +33,12 @@ jobs:
           dockerfile: .devcontainer/Dockerfile
 
       - name: Run gitleaks
+        # To bump gitleaks:
+        #   1. Find the latest release at
+        #      https://github.com/gitleaks/gitleaks/releases/latest
+        #   2. Download gitleaks_<version>_checksums.txt and copy the
+        #      sha256 for gitleaks_<version>_linux_x64.tar.gz
+        #   3. Update GITLEAKS_VERSION and GITLEAKS_SHA256 below.
         env:
           GITLEAKS_VERSION: "8.30.1"
           GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
