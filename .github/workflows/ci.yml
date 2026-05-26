@@ -38,7 +38,7 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - name: Build Docker image
-        run: docker build -t dev-template:latest .devcontainer/
+        run: docker build --pull -t dev-template:latest .devcontainer/
 
   test:
     runs-on: ubuntu-latest
