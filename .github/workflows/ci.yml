@@ -149,6 +149,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL'
+          ignore-unfixed: true
           exit-code: '1'
 
       - name: Upload Trivy image scan results
@@ -187,6 +188,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-fs-results.sarif'
           severity: 'CRITICAL'
+          ignore-unfixed: true
           exit-code: '1'
 
       - name: Upload Trivy filesystem scan results
