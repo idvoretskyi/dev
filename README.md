@@ -95,7 +95,7 @@ created from `main` will start in approximately **10–25 seconds**.
   scanning, image build (artifact-shared across jobs), devcontainer smoke
   testing, Trivy vulnerability scanning (gates on CRITICAL), SBOM generation,
   and scheduled daily security scans
-- `.github/dependabot.yml`: weekly updates for GitHub Actions, Docker base
+- `.github/dependabot.yml`: daily updates for GitHub Actions, Docker base
   images, and devcontainer features
 - `AGENTS.md`: guidance for AI agents and automated contributors working in
   this repository
