@@ -24,11 +24,16 @@
         },
         "ghcr.io/devcontainers/features/github-cli:1": {
             "version": "latest"
-        }
+        },
+        "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
     },
+    "mounts": [
+        "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume"
+    ],
     "customizations": {
         "vscode": {
             "extensions": [
+                "anthropic.claude-code",
                 "github.copilot",
                 "github.copilot-chat",
                 "ms-python.python",

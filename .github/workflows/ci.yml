@@ -5,11 +5,12 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
-  actions: read
-  security-events: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Validate
     timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -58,20 +62,34 @@ jobs:
             --report-path gitleaks.sarif
 
       - name: Upload gitleaks SARIF
-        if: always()
+        if: >
+          always() &&
+          (github.event_name != 'pull_request' ||
+           github.event.pull_request.head.repo.full_name == github.repository)
         uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
         with:
           sarif_file: gitleaks.sarif
           category: security-analysis/gitleaks
 
       - name: Build Docker image
-        run: docker build --pull -t dev-template:latest .devcontainer/
+        run: |
+          docker build --pull -t "dev-template:${{ github.sha }}" .devcontainer/
+          docker save "dev-template:${{ github.sha }}" -o /tmp/dev-template.tar
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: docker-image-${{ github.sha }}
+          path: /tmp/dev-template.tar
+          retention-days: 1
 
   test:
     runs-on: ubuntu-latest
     name: Test Devcontainer
     needs: build
     timeout-minutes: 20
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -84,7 +102,7 @@ jobs:
           push: never
           runCmd: |
             set -eu
-            for cmd in python3 node npm gh opencode curl jq; do
+            for cmd in python3 node npm gh opencode curl jq claude; do
               if ! command -v "$cmd" >/dev/null 2>&1; then
                 echo "::error::$cmd is missing"
                 exit 1
@@ -97,3 +115,82 @@ jobs:
             opencode --version
             curl --version | head -1
             jq --version
+            claude --version
+
+  scan:
+    runs-on: ubuntu-latest
+    name: Security and SBOM Analysis
+    needs: build
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-${{ github.sha }}
+          path: /tmp
+
+      - name: Load Docker image
+        run: docker load -i /tmp/dev-template.tar
+
+      - name: Run Trivy vulnerability scanner (image)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: 'dev-template:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+          exit-code: '1'
+
+      - name: Upload Trivy image scan results
+        if: >
+          always() &&
+          (github.event_name != 'pull_request' ||
+           github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'security-analysis/trivy-image'
+
+      - name: Generate SBOM
+        if: always()
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
+        with:
+          image: 'dev-template:${{ github.sha }}'
+          format: 'spdx-json'
+          output-file: 'sbom.spdx.json'
+
+      - name: Upload SBOM as artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: sbom-${{ github.sha }}
+          path: sbom.spdx.json
+          retention-days: 30
+
+      - name: Run Trivy vulnerability scanner (filesystem)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-fs-results.sarif'
+          severity: 'CRITICAL'
+          exit-code: '1'
+
+      - name: Upload Trivy filesystem scan results
+        if: >
+          always() &&
+          (github.event_name != 'pull_request' ||
+           github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
+        with:
+          sarif_file: 'trivy-fs-results.sarif'
+          category: 'security-analysis/trivy-filesystem'

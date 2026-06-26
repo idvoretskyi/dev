@@ -1,12 +1,12 @@
 # Keep devcontainer dependencies up to date
 version: 2
 updates:
-  # Monitor GitHub Actions
+  # Monitor GitHub Actions — daily, security-critical supply-chain component
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
+      interval: "daily"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "github-actions"
@@ -19,12 +19,12 @@ updates:
           - "minor"
           - "patch"
 
-  # Monitor Docker base images
+  # Monitor Docker base images — daily, CVEs ship in base images
   - package-ecosystem: "docker"
     directory: "/.devcontainer"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
+      interval: "daily"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "docker"
@@ -36,3 +36,16 @@ updates:
         update-types:
           - "minor"
           - "patch"
+
+  # Monitor devcontainer features — daily, includes claude-code, node, github-cli, common-utils, sshd
+  - package-ecosystem: "devcontainers"
+    directory: "/.devcontainer"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "devcontainers"
+    commit-message:
+      prefix: "feat"
+      include: "scope"
