@@ -141,6 +141,8 @@ jobs:
         run: docker load -i /tmp/dev-template.tar
 
       - name: Run Trivy vulnerability scanner (image)
+        id: trivy-image
+        continue-on-error: true
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: 'dev-template:${{ github.sha }}'
@@ -176,6 +178,8 @@ jobs:
           retention-days: 30
 
       - name: Run Trivy vulnerability scanner (filesystem)
+        id: trivy-fs
+        continue-on-error: true
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: 'fs'
@@ -194,3 +198,9 @@ jobs:
         with:
           sarif_file: 'trivy-fs-results.sarif'
           category: 'security-analysis/trivy-filesystem'
+
+      - name: Fail job if any Trivy scan found CRITICAL vulnerabilities
+        if: steps.trivy-image.outcome == 'failure' || steps.trivy-fs.outcome == 'failure'
+        run: |
+          echo "::error::Trivy found CRITICAL vulnerabilities. Review the Security tab for details."
+          exit 1
