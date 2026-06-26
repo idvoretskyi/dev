@@ -151,6 +151,7 @@ jobs:
           severity: 'CRITICAL'
           ignore-unfixed: true
           exit-code: '1'
+          cache: false
 
       - name: Upload Trivy image scan results
         if: >
@@ -190,6 +191,7 @@ jobs:
           severity: 'CRITICAL'
           ignore-unfixed: true
           exit-code: '1'
+          cache: false
 
       - name: Upload Trivy filesystem scan results
         if: >
