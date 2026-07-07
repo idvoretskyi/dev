@@ -9,16 +9,18 @@ Codespaces and local VS Code Dev Containers.
 
 ## Features
 
-- Ubuntu 24.04 base image
+- Ubuntu 26.04 (Resolute) base image
 - Single-image devcontainer build based on `.devcontainer/Dockerfile`
 - Core tooling for general development work:
   - Python 3 with `venv` and `pip`
   - Node.js LTS with `npm`
   - GitHub CLI
+  - Claude Code CLI (authenticated session persisted across rebuilds)
   - OpenCode TUI installed via `updateContentCommand` (cached by prebuilds)
   - Bash shell with common utilities
   - Build essentials (`gcc`, `make`, and related packages) via base image
 - VS Code extensions:
+  - Claude Code
   - Python and Pylance
   - GitHub Copilot and Copilot Chat
   - YAML
@@ -27,13 +29,18 @@ Codespaces and local VS Code Dev Containers.
 
 The devcontainer is tuned for fast Codespaces startup:
 
-- Minimal feature set: only `common-utils`, `sshd`, `node`, and `github-cli`
-  features are installed — Docker-in-Docker and git features are omitted
+- Minimal feature set: only `common-utils`, `sshd`, `node`, `github-cli`, and
+  `claude-code` features are installed — Docker-in-Docker and git features are
+  omitted
 - `common-utils` configured with zsh and Oh My Zsh disabled
-- `curl`, `wget`, `jq`, and `git` sourced from the base image and
-  `common-utils` feature — not re-installed in the Dockerfile
-- OpenCode TUI installed in `updateContentCommand` instead of `postCreateCommand`,
-  so it is cached during Codespaces prebuilds and not re-run on every start
+- `curl`, `wget`, `jq`, and `git` sourced from the base image — not
+  re-installed in the Dockerfile
+- OpenCode TUI installed in `updateContentCommand` instead of
+  `postCreateCommand`, so it is cached during Codespaces prebuilds and not
+  re-run on every start
+- Claude Code authentication stored in a named volume
+  (`claude-code-config-${devcontainerId}`) so sign-in survives container
+  rebuilds
 - Small, targeted extension set
 
 Approximate startup time: **~45–75 seconds** without prebuilds and
@@ -70,23 +77,28 @@ created from `main` will start in approximately **10–25 seconds**.
 1. Click "Code" button on the GitHub repository
 2. Select "Create codespace on main"
 3. Wait for the environment to build
+4. Run `claude` in the integrated terminal and follow the authentication prompt
 
 ### VS Code Local Dev Containers
 
 1. Clone this repository
 2. Open in VS Code
 3. Click "Reopen in Container" when prompted
+4. Run `claude` in the integrated terminal and follow the authentication prompt
 
 ## Repository Structure
 
 - `.devcontainer/devcontainer.json`: main devcontainer definition, features,
   VS Code extensions, and lifecycle commands
 - `.devcontainer/Dockerfile`: minimal image customization for Python packages
-- `.github/workflows/ci.yml`: CI checks for Dockerfile linting, secret
-  scanning, image build, and devcontainer smoke testing
-- `.github/workflows/security.yml`: scheduled and on-push Trivy image and
-  filesystem scans, plus SBOM generation
-- `.github/dependabot.yml`: weekly GitHub Actions and Docker base-image updates
+- `.github/workflows/ci.yml`: CI pipeline — Dockerfile linting, secret
+  scanning, image build (artifact-shared across jobs), devcontainer smoke
+  testing, Trivy vulnerability scanning (gates on CRITICAL), SBOM generation,
+  and scheduled daily security scans
+- `.github/dependabot.yml`: daily updates for GitHub Actions, Docker base
+  images, and devcontainer features
+- `AGENTS.md`: guidance for AI agents and automated contributors working in
+  this repository
 
 ## Using as a Template
 
@@ -124,8 +136,8 @@ To add Docker support when you need it:
 }
 ```
 
-If you add new features or packages, keep the CI workflow in sync with any new
-tooling expectations you want validated during the container smoke test.
+If you add new features or packages, keep the CI smoke test in sync with any
+new tooling expectations you want validated during the container smoke test.
 
 ## License
 
