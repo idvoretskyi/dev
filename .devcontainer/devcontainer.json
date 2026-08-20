@@ -49,6 +49,6 @@
             }
         }
     },
-    "updateContentCommand": "npm install -g @anthropic-ai/claude-code opencode-ai && node \"$(npm root -g)/@anthropic-ai/claude-code/install.cjs\"",
+    "updateContentCommand": "npm install -g opencode-ai",
     "postCreateCommand": "opencode --version && echo 'Development environment ready'"
 }
