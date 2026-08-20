@@ -16,6 +16,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Same-repo PRs have a writable token; fork PRs get a read-only token that
+  # cannot upload SARIF. Computed once here and reused by every upload step
+  # instead of repeating the same three-line condition in each job.
+  UPLOAD_SARIF: >-
+    ${{ github.event_name != 'pull_request' ||
+        github.event.pull_request.head.repo.full_name == github.repository }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,6 +33,11 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -62,10 +75,7 @@ jobs:
             --report-path gitleaks.sarif
 
       - name: Upload gitleaks SARIF
-        if: >
-          always() &&
-          (github.event_name != 'pull_request' ||
-           github.event.pull_request.head.repo.full_name == github.repository)
+        if: always() && env.UPLOAD_SARIF == 'true'
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
         with:
           sarif_file: gitleaks.sarif
@@ -91,6 +101,11 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -107,15 +122,8 @@ jobs:
                 echo "::error::$cmd is missing"
                 exit 1
               fi
+              "$cmd" --version 2>&1 | head -1
             done
-            python3 --version
-            node --version
-            npm --version
-            gh --version
-            opencode --version
-            curl --version | head -1
-            jq --version
-            claude --version
 
   scan:
     runs-on: ubuntu-latest
@@ -126,6 +134,11 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        with:
+          egress-policy: audit
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -155,10 +168,7 @@ jobs:
           cache: false
 
       - name: Upload Trivy image scan results
-        if: >
-          always() &&
-          (github.event_name != 'pull_request' ||
-           github.event.pull_request.head.repo.full_name == github.repository)
+        if: always() && env.UPLOAD_SARIF == 'true'
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
         with:
           sarif_file: 'trivy-results.sarif'
@@ -196,10 +206,7 @@ jobs:
           cache: false
 
       - name: Upload Trivy filesystem scan results
-        if: >
-          always() &&
-          (github.event_name != 'pull_request' ||
-           github.event.pull_request.head.repo.full_name == github.repository)
+        if: always() && env.UPLOAD_SARIF == 'true'
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
         with:
           sarif_file: 'trivy-fs-results.sarif'
