@@ -57,6 +57,10 @@ current via daily PRs.
   `# hadolint ignore=DLXXXX` with a justification comment.
 - Keep the package list minimal — features (not the Dockerfile) install
   language runtimes and CLI tools.
+- The `linux-libc-dev` purge and Pebble binary removal are deliberate CVE
+  fixes (see inline comments) — the `scan` job gates on CRITICAL Trivy
+  findings, so don't drop these lines without re-verifying the scan stays
+  clean.
 
 ## CI pipeline (`ci.yml`)
 
@@ -119,3 +123,14 @@ npx @devcontainers/cli exec --workspace-folder . -- bash -c '
 - **Volume mount target.** The Claude Code volume is mounted at
   `/home/vscode/.claude` (matching `remoteUser: vscode`). If the remote user
   ever changes, the mount target must be updated to match.
+- **Claude Code CLI is installed by the devcontainer feature**
+  (`ghcr.io/anthropics/devcontainer-features/claude-code:1.0`), which runs as
+  root during the image build and places the package under the nvm global
+  `node_modules` dir. Never add `npm install -g @anthropic-ai/claude-code` (or
+  re-run its `install.cjs`) to `updateContentCommand` — that step runs as user
+  `vscode` and fails with `EACCES` trying to rename the root-owned package
+  (this broke CI in PR #51). `updateContentCommand` should only install
+  user-writable packages (currently just `opencode-ai`).
+- **CI runs on Copilot/bot-authored PR branches often show `action_required`**
+  and won't execute automatically. Approve them in the GitHub UI, or run
+  `gh run rerun <run-id> --repo idvoretskyi/dev` to trigger them.
