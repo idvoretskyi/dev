@@ -45,7 +45,7 @@ jobs:
           persist-credentials: false
 
       - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@2a66e89f53d0771bb131a7fa31f3136336094aa6 # v3.4.0
+        uses: hadolint/hadolint-action@06be81baf89a55ffd0e24b8f04a4185738dd3387 # v3.5.0
         with:
           dockerfile: .devcontainer/Dockerfile
 
@@ -76,7 +76,7 @@ jobs:
 
       - name: Upload gitleaks SARIF
         if: always() && env.UPLOAD_SARIF == 'true'
-        uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
+        uses: github/codeql-action/upload-sarif@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4
         with:
           sarif_file: gitleaks.sarif
           category: security-analysis/gitleaks
@@ -169,7 +169,7 @@ jobs:
 
       - name: Upload Trivy image scan results
         if: always() && env.UPLOAD_SARIF == 'true'
-        uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
+        uses: github/codeql-action/upload-sarif@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'security-analysis/trivy-image'
@@ -207,7 +207,7 @@ jobs:
 
       - name: Upload Trivy filesystem scan results
         if: always() && env.UPLOAD_SARIF == 'true'
-        uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
+        uses: github/codeql-action/upload-sarif@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4
         with:
           sarif_file: 'trivy-fs-results.sarif'
           category: 'security-analysis/trivy-filesystem'
