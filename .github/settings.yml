@@ -1,0 +1,20 @@
+# Repository metadata managed as code.
+# Applied by the "Settings" GitHub App (https://github.com/apps/settings)
+# on every push to the default branch. If the app is not installed on this
+# repository, this file is inert and metadata must be set manually
+# (e.g. `gh repo edit`).
+#
+# Deliberately scoped to metadata and merge settings only -- no `branches:`
+# block, so existing branch protection rules are left untouched.
+repository:
+  description: >-
+    Lean Ubuntu 26.04 dev container template for GitHub Codespaces and
+    VS Code Dev Containers, with Python, Node.js, GitHub CLI, Claude Code,
+    and OpenCode
+  topics: devcontainer, codespaces, ubuntu, template, opencode, claude-code
+  has_issues: true
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  delete_branch_on_merge: true

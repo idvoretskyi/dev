@@ -18,6 +18,7 @@ meaningful files are configuration.
   devcontainer.json   Feature declarations, VS Code extensions, volume mounts, lifecycle commands
 .github/
   dependabot.yml      Daily Dependabot updates for GitHub Actions, Docker images, devcontainer features
+  settings.yml        Repo description, topics, merge settings (applied by the Settings GitHub App)
   workflows/
     ci.yml            Single CI pipeline: build → test → scan (see CI section below)
 .gitignore            Excludes OS files, editor dirs, Claude session state (.claude/, CLAUDE.md)
