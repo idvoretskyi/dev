@@ -13,8 +13,6 @@ repository:
     and OpenCode
   topics: devcontainer, codespaces, ubuntu, template, opencode, claude-code
   has_issues: true
-  has_wiki: false
-  has_projects: false
   default_branch: main
   allow_squash_merge: true
   allow_merge_commit: false
