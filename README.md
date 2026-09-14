@@ -15,8 +15,10 @@ Codespaces and local VS Code Dev Containers.
   - Python 3 with `venv` and `pip`
   - Node.js LTS with `npm`
   - GitHub CLI
+  - GitHub Copilot CLI
   - Claude Code CLI (authenticated session persisted across rebuilds)
-  - OpenCode TUI installed via `updateContentCommand` (cached by prebuilds)
+  - OpenCode TUI and GitHub Copilot CLI installed via `updateContentCommand`
+    (cached by prebuilds)
   - Bash shell with common utilities
   - Build essentials (`gcc`, `make`, and related packages) via base image
 - VS Code extensions:
@@ -35,9 +37,9 @@ The devcontainer is tuned for fast Codespaces startup:
 - `common-utils` configured with zsh and Oh My Zsh disabled
 - `curl`, `wget`, `jq`, and `git` sourced from the base image — not
   re-installed in the Dockerfile
-- OpenCode TUI installed in `updateContentCommand` instead of
-  `postCreateCommand`, so it is cached during Codespaces prebuilds and not
-  re-run on every start
+- OpenCode TUI and GitHub Copilot CLI installed in `updateContentCommand`
+  instead of `postCreateCommand`, so they are cached during Codespaces
+  prebuilds and not re-run on every start
 - Claude Code authentication stored in a named volume
   (`claude-code-config-${devcontainerId}`) so sign-in survives container
   rebuilds
@@ -77,14 +79,16 @@ created from `main` will start in approximately **10–25 seconds**.
 1. Click "Code" button on the GitHub repository
 2. Select "Create codespace on main"
 3. Wait for the environment to build
-4. Run `claude` in the integrated terminal and follow the authentication prompt
+4. Run `copilot` or `claude` in the integrated terminal and follow the
+   authentication prompt
 
 ### VS Code Local Dev Containers
 
 1. Clone this repository
 2. Open in VS Code
 3. Click "Reopen in Container" when prompted
-4. Run `claude` in the integrated terminal and follow the authentication prompt
+4. Run `copilot` or `claude` in the integrated terminal and follow the
+   authentication prompt
 
 ## Repository Structure
 

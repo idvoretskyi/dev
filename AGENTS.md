@@ -6,9 +6,9 @@ Guidance for AI agents and automated contributors working in this repository.
 
 This repository is a lean development container template for GitHub Codespaces
 and local VS Code Dev Containers. It defines a reproducible Ubuntu 26.04
-environment with Python 3, Node.js LTS, GitHub CLI, Claude Code CLI, and
-OpenCode TUI. The repository contains no application source code — all
-meaningful files are configuration.
+environment with Python 3, Node.js LTS, GitHub CLI, GitHub Copilot CLI, Claude
+Code CLI, and OpenCode TUI. The repository contains no application source code
+— all meaningful files are configuration.
 
 ## Repository layout
 
@@ -103,7 +103,7 @@ docker build --pull -t dev-template:local .devcontainer/
 npx -y @devcontainers/cli up --workspace-folder . --remove-existing-container
 npx @devcontainers/cli exec --workspace-folder . -- bash -c '
   set -eu
-  for cmd in python3 node npm gh opencode curl jq claude; do
+  for cmd in python3 node npm gh opencode copilot curl jq claude; do
     command -v "$cmd" || { echo "MISSING: $cmd"; exit 1; }
   done
   claude --version
