@@ -131,7 +131,7 @@ npx @devcontainers/cli exec --workspace-folder . -- bash -c '
   re-run its `install.cjs`) to `updateContentCommand` — that step runs as user
   `vscode` and fails with `EACCES` trying to rename the root-owned package
   (this broke CI in PR #51). `updateContentCommand` should only install
-  user-writable packages (currently just `opencode-ai`).
+  user-writable packages (currently `opencode-ai` and `@github/copilot`).
 - **CI runs on Copilot/bot-authored PR branches often show `action_required`**
   and won't execute automatically. Approve them in the GitHub UI, or run
   `gh run rerun <run-id> --repo idvoretskyi/dev` to trigger them.
