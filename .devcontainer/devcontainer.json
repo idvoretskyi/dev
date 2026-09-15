@@ -49,6 +49,6 @@
             }
         }
     },
-    "updateContentCommand": "npm install -g opencode-ai",
+    "updateContentCommand": "npm install -g opencode-ai @github/copilot",
     "postCreateCommand": "opencode --version && echo 'Development environment ready'"
 }

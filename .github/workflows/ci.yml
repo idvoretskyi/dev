@@ -117,7 +117,7 @@ jobs:
           push: never
           runCmd: |
             set -eu
-            for cmd in python3 node npm gh opencode curl jq claude; do
+            for cmd in python3 node npm gh opencode copilot curl jq claude; do
               if ! command -v "$cmd" >/dev/null 2>&1; then
                 echo "::error::$cmd is missing"
                 exit 1
